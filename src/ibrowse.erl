@@ -464,6 +464,12 @@ ensure_bin(Fun) when is_function(Fun)             -> Fun;
 ensure_bin({Fun}) when is_function(Fun)           -> Fun;
 ensure_bin({Fun, _} = Body) when is_function(Fun) -> Body.
 
+ensure_str(V) when is_list(V)                     -> V;
+ensure_str(V) when is_binary(V)                   -> binary_to_list(V);
+ensure_str(V) when is_atom(V)                     -> atom_to_list(V);
+ensure_str(V) when is_integer(V)                  -> integer_to_list(V);
+ensure_str(V) when is_number(V)                   -> lists:flatten(io_lib:format("~p", [V])).
+
 %% @doc Creates a HTTP client process to the specified Host:Port which
 %% is not part of the load balancing pool. This is useful in cases
 %% where some requests to a webserver might take a long time whereas
@@ -609,9 +615,9 @@ show_dest_status() ->
     lists:foreach(
       fun({Host, Port, Lb_pid, Tid, Size}) ->
               io:format("~40.40s | ~-5.5s | ~-5.5s | ~p~n",
-                        [Host ++ ":" ++ integer_to_list(Port),
-                         integer_to_list(Tid),
-                         integer_to_list(Size), 
+                        [Host ++ ":" ++ ensure_str(Port),
+                         ensure_str(Tid),
+                         ensure_str(Size),
                          Lb_pid])
       end, Metrics).
 
