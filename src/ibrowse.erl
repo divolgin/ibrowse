@@ -608,20 +608,20 @@ all_trace_off() ->
 %% about workers spawned using spawn_worker_process/2 or
 %% spawn_link_worker_process/2 is not included.
 show_dest_status() ->
-    io:format("~-40.40s | ~-5.5s | ~-10.10s | ~s~n",
+    io:format("~-40.40s | ~-7.7s | ~-10.10s | ~s~n",
               ["Server:port", "ETS", "Num conns", "LB Pid"]),
     io:format("~80.80.=s~n", [""]),
     Metrics = get_metrics(),
     lists:foreach(
       fun({Host, Port, Lb_pid, Tid, Size}) ->
-              io:format("~40.40s | ~-5.5s | ~-5.5s | ~p~n",
+              io:format("~40.40s | ~-7.7s | ~-5.5s | ~p~n",
                         [Host ++ ":" ++ ensure_str(Port),
                          ensure_str(Tid),
                          ensure_str(Size),
                          Lb_pid])
       end, Metrics).
 
-show_dest_status(Url) ->                                          
+show_dest_status(Url) ->
     #url{host = Host, port = Port} = ibrowse_lib:parse_url(Url),
     show_dest_status(Host, Port).
 
